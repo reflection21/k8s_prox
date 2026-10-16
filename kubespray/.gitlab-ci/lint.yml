@@ -1,0 +1,39 @@
+---
+pre-commit:
+  stage: test
+  tags:
+  - ffci
+  image: 'ghcr.io/pre-commit-ci/runner-image@sha256:fe01a6ec51b298412990b88627c3973b1146c7304f930f469bafa29ba60bcde9'
+  variables:
+    PRE_COMMIT_HOME: ${CI_PROJECT_DIR}/.cache/pre-commit
+    ANSIBLE_STDOUT_CALLBACK: default
+  script:
+  - pre-commit run --hook-stage manual --all-files --show-diff-on-failure
+  cache:
+    key: pre-commit-2
+    paths:
+    - ${PRE_COMMIT_HOME}
+    when: 'always'
+  needs: []
+
+# Verify non-root Git setup, CI file writes, and local Ansible execution.
+non-root-controller:
+  extends: .job
+  stage: test
+  script:
+  - test "$(id -u)" -ne 0
+  - if sudo -n true; then exit 1; fi
+  - test "$HOME" = /home/kubespray
+  - |
+    for directory in "$HOME" "$CI_PROJECT_DIR" "$CI_PROJECT_DIR/.git" "$CI_PROJECT_DIR"/contrib/terraform/*/; do
+      probe=$(mktemp "$directory/.write-check.XXXXXX")
+      rm "$probe"
+    done
+  - ansible localhost --connection=local -m setup -a 'filter=ansible_user_uid'
+
+vagrant-validate:
+  extends: .job
+  stage: test
+  tags: [ffci]
+  script:
+  - ./tests/scripts/vagrant-validate.sh

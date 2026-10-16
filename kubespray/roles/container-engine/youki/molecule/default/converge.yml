@@ -1,0 +1,14 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+  vars:
+    youki_enabled: true
+    container_manager: crio
+  roles:
+    - role: kubespray_defaults
+    # Keep the order used by roles/container-engine/tasks/main.yml: runtime
+    # roles run before the container manager, so the youki binary exists when
+    # cri-o is (re)started and the youki runtime handler is registered.
+    - role: container-engine/youki
+    - role: container-engine/cri-o

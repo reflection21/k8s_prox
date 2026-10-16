@@ -1,0 +1,15 @@
+# ---
+# peers:
+#   - router_id: "10.99.0.34"
+#     as: "65xxx"
+#     filters: []
+#     numallowedlocalasnumbers: 0
+#     sourceaddress: "None"
+#   - router_id: "10.99.0.35"
+#     as: "65xxx"
+#     filters: []
+#     numallowedlocalasnumbers: 0
+#     sourceaddress: "None"
+
+# kube_apiserver_endpoint: "https://10.99.0.44:8383"
+# kube_apiserver_cluster_internal_endpoint: "https://10.99.0.44:8383"

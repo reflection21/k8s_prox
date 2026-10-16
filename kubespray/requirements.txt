@@ -1,0 +1,7 @@
+ansible==14.5.0
+# Needed for community.crypto module
+cryptography==50.0.2
+# Needed for jinja2 json_query templating
+jmespath==1.1.0
+# Needed for ansible.utils.ipaddr
+netaddr==1.3.0
